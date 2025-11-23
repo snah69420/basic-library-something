@@ -1,4 +1,4 @@
-package library; // Eclipse-specific line, please remove!
+package library; // eclipseIDE-specific line, please remove!
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -9,10 +9,63 @@ public class PasswordManager {
 		ArrayList<String> user = new ArrayList<>();
 		ArrayList<String> password = new ArrayList<>();
 		ArrayList<String> site = new ArrayList<>();
+		ArrayList<String> loginUser = new ArrayList<>();
+		ArrayList<String> loginPass = new ArrayList<>();
 		String db = "database.txt";
 		// load the database
-		loadDB(db, user, password, site);
+		loadDB(db, user, password, site, loginUser, loginPass);
 		
+		
+		// First time setup part
+		
+		if (loginUser.isEmpty()) {
+			System.out.println("First-time Setup");
+			
+			System.out.print("Enter username: ");
+			loginUser.add(input.nextLine());
+			
+			System.out.print("Enter password: ");
+			String loginPassUnconfirmed = input.nextLine();
+			
+			System.out.print("Enter password: ");
+			String confirm = input.nextLine();
+			
+			if (loginPassUnconfirmed.equals(confirm)) {
+			loginPass.add(loginPassUnconfirmed);
+			System.out.println("Setup finished!");
+			
+			// save data
+		    saveData(db, user, password, site, loginUser, loginPass);
+
+			
+			} else {
+				System.out.println("Passwords do not match. Restart the program and try again!");
+				return;
+			}
+		} else { // Already Registered
+			System.out.println("Please login.");
+			
+			boolean loggedIn = false;
+					
+		
+			while (!loggedIn) {
+			System.out.print("Username: ");
+			String loginUserRegistered = input.nextLine();
+			
+			System.out.print("Password: ");
+			String loginPassRegistered = input.nextLine();
+			
+			String storedUser = loginUser.get(0);
+			String storedPass = loginPass.get(0);
+			
+			if (loginUserRegistered.equals(storedUser) && loginPassRegistered.equals(storedPass)) {
+				System.out.println("Successfully logged in.");
+				loggedIn = true;
+			} else {
+			System.out.println("Username or Password does not match the database, try again!");
+				}
+			}
+		}
 		// Main part
 		while (true) {
 		System.out.println("---Welcome to our Password Manager!---");
@@ -37,7 +90,7 @@ public class PasswordManager {
 			site.add(input.nextLine());
 			
 			System.out.println("Credentials added!");
-			saveData(db, user, password, site);
+			saveData(db, user, password, site, loginUser, loginPass);
 
 		// VIEW
 		} else if (choice.equals("2")) {
@@ -63,7 +116,7 @@ public class PasswordManager {
                    
                    
 			 }
-            //       System.out.println("   Username: " + user.get(i)); << Unused Code
+            //       System.out.println("   Username: " + user.get(i));
             //       System.out.println("   Password: " + password.get(i));
             //       System.out.println("-------------------------");
          
@@ -96,8 +149,7 @@ public class PasswordManager {
 		}
 	}
 	// save to txt thingy
-	public static void saveData(String db, ArrayList<String> user, ArrayList<String> password,
-			ArrayList<String> site) {
+	public static void saveData(String db, ArrayList<String> user, ArrayList<String> password, ArrayList<String> site, ArrayList<String> loginUser, ArrayList<String> loginPass) {
 		try {
 			File file = new File(db);
 			File parent = file.getParentFile();
@@ -105,6 +157,11 @@ public class PasswordManager {
 			    parent.mkdirs();
 			}
 			try (PrintWriter pw = new PrintWriter(new FileWriter(file))) {
+
+				// First-time setup save login
+				if (!loginUser.isEmpty() && !loginPass.isEmpty()) {
+					pw.println("LOGIN|" + loginUser.get(0) + "|" + loginPass.get(0));
+				} // database thingy
 				for (int i = 0; i < user.size(); i++) {
 					String u = user.get(i).replace("|", "/");
 					String p = password.get(i).replace("|", "/");
@@ -120,26 +177,29 @@ public class PasswordManager {
 			System.out.println("Error saving database.");
 		}
 	}
-	// loadDB object
-	public static void loadDB(String db, ArrayList<String> user, ArrayList<String> password, ArrayList<String> site) {
+	// loadDB method
+	public static void loadDB(String db, ArrayList<String> user, ArrayList<String> password, ArrayList<String> site, ArrayList<String> loginUser, ArrayList<String> loginPass) {
 		try {
-		File file = new File(db);
-    	if (!file.exists()) return;
+			File file = new File(db);
+			if (!file.exists()) return;
 
-        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
-        	String line;
-        	while ((line = br.readLine()) != null) {
-            	String[] parts = line.split("\\|");
-            	if (parts.length == 3) {
-            		user.add(parts[0]);
-                	password.add(parts[1]);
-                	site.add(parts[2]);
-                }
-            }
-        }
-	} catch (Exception e) {
-		System.out.println("Error loading database.");
-    }
+			try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+				String line;
+				while ((line = br.readLine()) != null) {
+					String[] parts = line.split("\\|");
+            	
+					if (parts[0].equals("LOGIN")) {
+						loginUser.add(parts[1]);
+						loginPass.add(parts[2]);
+					} else if(parts.length == 3) {
+						user.add(parts[0]);
+						password.add(parts[1]);
+						site.add(parts[2]);
+					}
+				}
+			}
+		} catch (Exception e) {
+			System.out.println("Error loading database.");
+		}
 	}
 }
-
