@@ -45,14 +45,28 @@ public class PasswordManager {
 			if(user.isEmpty()) {
 				System.out.println("There are no credentials added, yet...");
 			 } else {
-                 System.out.println("\n--- STORED CREDENTIALS ---");
-                 for (int i = 0; i < user.size(); i++) {
-                     System.out.println((i + 1) + ". " + site.get(i));
-                     System.out.println("   Username: " + user.get(i));
-                     System.out.println("   Password: " + password.get(i));
-                     System.out.println("-------------------------");
-                 }
-			}
+               System.out.println("--- Websites ---");
+               for (int i = 0; i < user.size(); i++) {
+                   System.out.println((i + 1) + ". " + site.get(i));
+               }
+               // Query
+                   System.out.println("Select a website: ");
+                   int query_site = input.nextInt();
+                   int site_index = query_site - 1;
+                   input.nextLine();
+                   System.out.println("--- Credentials on " + site.get(site_index) + " ---");
+                   System.out.println("Username: " + user.get(site_index));
+                   System.out.println("Password: " + password.get(site_index));
+                   
+                   System.out.println("Press enter to return to menu...");
+                   input.nextLine();
+                   
+                   
+			 }
+            //       System.out.println("   Username: " + user.get(i));
+            //       System.out.println("   Password: " + password.get(i));
+            //       System.out.println("-------------------------");
+         
 			// Remove Credentials
 		} else if (choice.equals("3")) {
 			if (user.isEmpty()) {
@@ -108,23 +122,23 @@ public class PasswordManager {
 	}
 	// loadDB object
 	public static void loadDB(String db, ArrayList<String> user, ArrayList<String> password, ArrayList<String> site) {
-    try {
-        File file = new File(db);
-        if (!file.exists()) return;
+		try {
+		File file = new File(db);
+    	if (!file.exists()) return;
 
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                String[] parts = line.split("\\|");
-                if (parts.length == 3) {
-                    user.add(parts[0]);
-                    password.add(parts[1]);
-                    site.add(parts[2]);
+        	String line;
+        	while ((line = br.readLine()) != null) {
+            	String[] parts = line.split("\\|");
+            	if (parts.length == 3) {
+            		user.add(parts[0]);
+                	password.add(parts[1]);
+                	site.add(parts[2]);
                 }
             }
         }
-    } catch (Exception e) {
-        System.out.println("Error loading database.");
+	} catch (Exception e) {
+		System.out.println("Error loading database.");
     }
 	}
 }
