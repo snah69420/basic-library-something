@@ -1,4 +1,4 @@
-package library;
+package library; // Eclipse-specific line, please remove!
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -63,7 +63,7 @@ public class PasswordManager {
                    
                    
 			 }
-            //       System.out.println("   Username: " + user.get(i));
+            //       System.out.println("   Username: " + user.get(i)); << Unused Code
             //       System.out.println("   Password: " + password.get(i));
             //       System.out.println("-------------------------");
          
@@ -142,3 +142,4 @@ public class PasswordManager {
     }
 	}
 }
+
