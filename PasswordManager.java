@@ -142,7 +142,7 @@ public class PasswordManager {
 					user.remove(delIndex);
 					password.remove(delIndex);
 					site.remove(delIndex);
-					System.out.println("Book deleted successfully");
+					System.out.println("Credential deleted successfully");
 				} 
 				
 				}
