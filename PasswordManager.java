@@ -1,10 +1,11 @@
 package library; // eclipseIDE-specific line, please remove!
-import java.io.*;
-import java.util.ArrayList;
-import java.util.Scanner;
+import java.io.*;				// Majority of the functions like BufferedReader and stuff
+import java.util.ArrayList;		// Arrays
+import java.util.Scanner;		// yk what this is
 
 public class PasswordManager {
 	public static void main (String[] args) {
+		
 		Scanner input = new Scanner(System.in);
 		ArrayList<String> user = new ArrayList<>();
 		ArrayList<String> password = new ArrayList<>();
@@ -16,7 +17,7 @@ public class PasswordManager {
 		loadDB(db, user, password, site, loginUser, loginPass);
 		
 		
-		// First time setup part
+		// First-Time signup
 		
 		if (loginUser.isEmpty()) {
 			System.out.println("First-time Setup");
@@ -66,7 +67,10 @@ public class PasswordManager {
 				}
 			}
 		}
-		// Main part
+		
+		// END OF LOGIN FUNCTION
+		
+		// Main Screen
 		while (true) {
 		System.out.println("---Welcome to our Password Manager!---");
 		System.out.println("1. Add Credentials");
@@ -92,7 +96,7 @@ public class PasswordManager {
 			System.out.println("Credentials added!");
 			saveData(db, user, password, site, loginUser, loginPass);
 
-		// VIEW
+		// View Credentials
 		} else if (choice.equals("2")) {
 			System.out.println("---View Credentials---");
 			if(user.isEmpty()) {
@@ -116,9 +120,9 @@ public class PasswordManager {
                    
                    
 			 }
-            //       System.out.println("   Username: " + user.get(i));
-            //       System.out.println("   Password: " + password.get(i));
-            //       System.out.println("-------------------------");
+            //       System.out.println("   Username: " + user.get(i)); 		]
+            //       System.out.println("   Password: " + password.get(i));		]	UNUSED CODE! feel free to delete.
+            //       System.out.println("-------------------------");			]
          
 			// Remove Credentials
 		} else if (choice.equals("3")) {
@@ -148,6 +152,9 @@ public class PasswordManager {
 		}
 		}
 	}
+	
+	// END OF PROGRAM, here are the methods, kinda stolen tho
+	
 	// save to txt thingy
 	public static void saveData(String db, ArrayList<String> user, ArrayList<String> password, ArrayList<String> site, ArrayList<String> loginUser, ArrayList<String> loginPass) {
 		try {
@@ -177,7 +184,7 @@ public class PasswordManager {
 			System.out.println("Error saving database.");
 		}
 	}
-	// loadDB method
+	// loadDB method, loads the database on execution
 	public static void loadDB(String db, ArrayList<String> user, ArrayList<String> password, ArrayList<String> site, ArrayList<String> loginUser, ArrayList<String> loginPass) {
 		try {
 			File file = new File(db);
