@@ -26,8 +26,8 @@ public class PasswordManagerOld_MultiUser {
 		loadDB(db, user, password, site, loginUser, loginPass, userID, credentialUserID);
 		
 		boolean loggedIn = false;	// while loop till they finna login
-		while (!loggedIn) {
 		// Login/Register Screen
+		while (!loggedIn) {
 		System.out.println("1. Login");
 		System.out.println("2. New User");
 		System.out.print("Select choice: ");
@@ -46,7 +46,7 @@ public class PasswordManagerOld_MultiUser {
 
 				// kowalski, analysis
 				boolean found = false;
-				for (int i = 0; i < loginUser.size(); i++) { 					// this for loop loops through all registered users
+				for (int i = 0; i < loginUser.size(); i++) { 					// this for loop loops through all registered users, it will try until it matches the userinput
 					String storedUser = loginUser.get(i); 						//	<</ This part gets the username of
 					String storedPass = loginPass.get(i); 						//	<<\ the (i)th registered user
 					if (loginUserRegistered.equals(storedUser) && loginPassRegistered.equals(storedPass)) {
@@ -77,11 +77,11 @@ public class PasswordManagerOld_MultiUser {
 			if (registerPass.equals(registerPassConfirm)) {
 				System.out.println("Successfully registered.");
 
-				String regUserID = "U" + (userID.size() + 1);
+				String regUserID = "U" + (userID.size() + 1); // UID Generation
 
 				loginUser.add(registerUser);
 				loginPass.add(registerPass);
-				userID.add(regUserID);
+				userID.add(regUserID);						  // UID Storing
 				currentUserID = regUserID;
 
 				saveData(db, user, password, site, credentialUserID, loginUser, loginPass, userID);
@@ -195,6 +195,9 @@ public class PasswordManagerOld_MultiUser {
 			}
 		}
 	}
+	
+	// END OF PROGRAM, here are the methods
+	
 	// getCurrentUser, 
 	private static String getCurrentUser(ArrayList<String> loginUser, ArrayList<String> userID, String currentUserID) {
 		for (int i = 0; i < userID.size(); i++) {
@@ -202,13 +205,14 @@ public class PasswordManagerOld_MultiUser {
 		}
 		return loginUser.get(0); //return to first username, definitely wont happen but just incase the thing crashes
 	}
+	
 	// saveData method, i honestly dont know how this works
 	public static void saveData(String db, ArrayList<String> user, ArrayList<String> password, ArrayList<String> site,
 			ArrayList<String> credentialUserID, ArrayList<String> loginUser, ArrayList<String> loginPass, ArrayList<String> userID) {
 		try {
-			File file = new File(db);
+			File file = new File(db); //change the directory if mentioned, this is tied to the variable at initialization
 			File parent = file.getParentFile();
-			if (parent != null) parent.mkdirs();
+			if (parent != null) parent.mkdirs();	// mkdir when does not exist
 
 			try (PrintWriter pw = new PrintWriter(new FileWriter(db))) {
 				for (int i = 0; i < loginUser.size(); i++) {
