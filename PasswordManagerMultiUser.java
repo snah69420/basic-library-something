@@ -3,7 +3,7 @@ import java.io.*;
 import java.util.ArrayList;		
 import java.util.Scanner;		
 
-public class PasswordManagerMultiUser {
+public class PasswordManagerOld_MultiUser {
 	public static void main (String[] args) {
 
 		Scanner input = new Scanner(System.in);
@@ -24,16 +24,18 @@ public class PasswordManagerMultiUser {
 
 		// load the database
 		loadDB(db, user, password, site, loginUser, loginPass, userID, credUserID);
-
+		
+		boolean loggedIn = false;
+		while (!loggedIn) {
 		// Login/Register Screen
 		System.out.println("1. Login");
 		System.out.println("2. New User");
 		System.out.print("Select choice: ");
 		String loginChoice = input.nextLine();
 
+
 		// Login
 		if (loginChoice.equals("1")) {
-			boolean loggedIn = false;
 			while (!loggedIn) {
 				System.out.print("Username: ");
 				String loginUserRegistered = input.nextLine();
@@ -47,7 +49,7 @@ public class PasswordManagerMultiUser {
 					String storedUser = loginUser.get(i); //	<</ This part gets the username of
 					String storedPass = loginPass.get(i); //	<<\ the (i)th registered user
 					if (loginUserRegistered.equals(storedUser) && loginPassRegistered.equals(storedPass)) {
-						System.out.println("Successfully logged in!");
+						System.out.println("Successfully logged in, welcome!");
 						currentUserID = userID.get(i); 	 // store the logged in user's userID to the memory
 						loggedIn = true;
 						found = true;	
@@ -55,7 +57,7 @@ public class PasswordManagerMultiUser {
 					}
 				}
 				if (!found) {	// not found fallback
-					System.out.println("Username or Password does not match the database, try again!");
+					System.out.println("Username or Password does not match, try again!");
 				}
 			}
 			// register
@@ -83,8 +85,10 @@ public class PasswordManagerMultiUser {
 
 				saveData(db, user, password, site, credUserID, loginUser, loginPass, userID);
 			}
+		} else {
+			System.out.println("Invalid choice, try again!");
 		}
-
+		}
 		// MAIN MENU!!!!
 		while (true) {
 			int currentIndex = loginUser.indexOf(getCurrentUser(loginUser, userID, currentUserID));
@@ -145,7 +149,7 @@ public class PasswordManagerMultiUser {
 						input.nextLine();
 					}
 				}
-
+			// delete credentials
 			} else if (choice.equals("3")) {
 				ArrayList<Integer> userCredentials = new ArrayList<>();
 				for (int i = 0; i < user.size(); i++) {
@@ -173,19 +177,19 @@ public class PasswordManagerMultiUser {
 						System.out.println("Credential deleted successfully");
 					}
 				}
-
+			// interrupt
 			} else if (choice.equals("4")) {
 				System.out.println("Exiting.");
 				break;
 			}
 		}
 	}
-	//
+	// getCurrentUser, 
 	private static String getCurrentUser(ArrayList<String> loginUser, ArrayList<String> userID, String currentUserID) {
 		for (int i = 0; i < userID.size(); i++) {
 			if (userID.get(i).equals(currentUserID)) return loginUser.get(i);
 		}
-		return loginUser.get(0);
+		return loginUser.get(0); //return to first username, definitely wont happen but just incase the thing crashes
 	}
 	// saveData method, i honestly dont know how this works
 	public static void saveData(String db, ArrayList<String> user, ArrayList<String> password, ArrayList<String> site,
