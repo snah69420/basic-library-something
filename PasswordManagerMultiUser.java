@@ -32,6 +32,7 @@ public class PasswordManagerOld_MultiUser {
 		System.out.println("2. New User");
 		System.out.print("Select choice: ");
 		String loginChoice = input.nextLine();
+		clearScreen();
 
 
 		// Login
@@ -53,14 +54,14 @@ public class PasswordManagerOld_MultiUser {
 						currentUserID = userID.get(i); 	 						// store the logged in user's userID to the memory
 						loggedIn = true;
 						found = true;	
-						break; 													//for loop stop
+						break; 													// for loop stop
 					}
 				}
 				if (!found) {													// not found fallback
 					System.out.println("Username or Password does not match, try again!");
 				}
 			}
-			// register
+		// register
 		} else if (loginChoice.equals("2")) {
 			System.out.println("New User");
 
@@ -105,6 +106,7 @@ public class PasswordManagerOld_MultiUser {
 
 			// Add Credentials
 			if (choice.equals("1")) {
+				clearScreen();
 				System.out.println("---Add Credentials---");
 				System.out.print("Enter Username/Email: ");
 				user.add(input.nextLine());
@@ -121,6 +123,7 @@ public class PasswordManagerOld_MultiUser {
 				
 			// view credentials
 			} else if (choice.equals("2")) {
+				clearScreen();
 				System.out.println("---View Credentials---");
 				ArrayList<Integer> userCredentials = new ArrayList<>(); 		// lists down the credentials that belong to currentUserID
 				for (int i = 0; i < user.size(); i++) {							// list all credentials
@@ -154,6 +157,7 @@ public class PasswordManagerOld_MultiUser {
 				}
 			// delete credentials
 			} else if (choice.equals("3")) {
+				clearScreen();
 				ArrayList<Integer> userCredentials = new ArrayList<>();
 				for (int i = 0; i < user.size(); i++) {
 					if (credentialUserID.get(i).equals(currentUserID)) userCredentials.add(i);
@@ -182,9 +186,11 @@ public class PasswordManagerOld_MultiUser {
 				}
 			// interrupt
 			} else if (choice.equals("4")) {
+				clearScreen();
 				System.out.println("Exiting.");
 				break;
 			} else {
+				clearScreen();
 				System.out.println("Invalid choice, try again!");
 			}
 		}
@@ -250,5 +256,10 @@ public class PasswordManagerOld_MultiUser {
 		} catch (Exception e) {
 			System.out.println("Error loading database.");
 		}
+	}
+	// cherry on top
+	public static void clearScreen() {
+    for (int i = 0; i < 50; i++) 
+    	System.out.println();
 	}
 }
