@@ -1,7 +1,7 @@
 package library; 				// eclipseIDE-specific line, please remove!
-import java.io.*;				
-import java.util.ArrayList;		
-import java.util.Scanner;		
+import java.io.*;				// BufferedReader, File, File reader, Print to File
+import java.util.ArrayList;		// Arrays
+import java.util.Scanner;		// yk what this is
 
 public class PasswordManagerOld_MultiUser {
 	public static void main (String[] args) {
@@ -12,20 +12,20 @@ public class PasswordManagerOld_MultiUser {
 		ArrayList<String> loginUser = new ArrayList<>();
 		ArrayList<String> loginPass = new ArrayList<>();
 		ArrayList<String> userID = new ArrayList<>();
-		String currentUserID = "";
+		String currentUserID = "";	// will be used below to store currentUserID when a user logs in
 
 		// Credentials
 		ArrayList<String> user = new ArrayList<>();
 		ArrayList<String> password = new ArrayList<>();
 		ArrayList<String> site = new ArrayList<>();
-		ArrayList<String> credUserID = new ArrayList<>();
+		ArrayList<String> credentialUserID = new ArrayList<>();
 		String db = "database.txt";
 
 
 		// load the database
-		loadDB(db, user, password, site, loginUser, loginPass, userID, credUserID);
+		loadDB(db, user, password, site, loginUser, loginPass, userID, credentialUserID);
 		
-		boolean loggedIn = false;
+		boolean loggedIn = false;	// while loop till they finna login
 		while (!loggedIn) {
 		// Login/Register Screen
 		System.out.println("1. Login");
@@ -45,18 +45,18 @@ public class PasswordManagerOld_MultiUser {
 
 				// kowalski, analysis
 				boolean found = false;
-				for (int i = 0; i < loginUser.size(); i++) { // this for loop loops through all registered users
-					String storedUser = loginUser.get(i); //	<</ This part gets the username of
-					String storedPass = loginPass.get(i); //	<<\ the (i)th registered user
+				for (int i = 0; i < loginUser.size(); i++) { 					// this for loop loops through all registered users
+					String storedUser = loginUser.get(i); 						//	<</ This part gets the username of
+					String storedPass = loginPass.get(i); 						//	<<\ the (i)th registered user
 					if (loginUserRegistered.equals(storedUser) && loginPassRegistered.equals(storedPass)) {
 						System.out.println("Successfully logged in, welcome!");
-						currentUserID = userID.get(i); 	 // store the logged in user's userID to the memory
+						currentUserID = userID.get(i); 	 						// store the logged in user's userID to the memory
 						loggedIn = true;
 						found = true;	
-						break; //for loop stop
+						break; 													//for loop stop
 					}
 				}
-				if (!found) {	// not found fallback
+				if (!found) {													// not found fallback
 					System.out.println("Username or Password does not match, try again!");
 				}
 			}
@@ -83,13 +83,15 @@ public class PasswordManagerOld_MultiUser {
 				userID.add(regUserID);
 				currentUserID = regUserID;
 
-				saveData(db, user, password, site, credUserID, loginUser, loginPass, userID);
+				saveData(db, user, password, site, credentialUserID, loginUser, loginPass, userID);
+			} else {
+				System.out.println("Invalid choice, please try again!");
 			}
 		} else {
 			System.out.println("Invalid choice, try again!");
 		}
 		}
-		// MAIN MENU!!!!
+// -----------------------------------------------------------MAIN MENU!!!!----------------------------------------------------------------------------
 		while (true) {
 			int currentIndex = loginUser.indexOf(getCurrentUser(loginUser, userID, currentUserID));
 			System.out.println("---Welcome to our Password Manager, " + loginUser.get(currentIndex) + "!---");
@@ -112,23 +114,24 @@ public class PasswordManagerOld_MultiUser {
 
 				System.out.print("Website?: ");
 				site.add(input.nextLine());
-				credUserID.add(currentUserID);
+				credentialUserID.add(currentUserID);
 
 				System.out.println("Credentials added!");
-				saveData(db, user, password, site, credUserID, loginUser, loginPass, userID);
+				saveData(db, user, password, site, credentialUserID, loginUser, loginPass, userID);
+				
 			// view credentials
 			} else if (choice.equals("2")) {
 				System.out.println("---View Credentials---");
-				ArrayList<Integer> userCredentials = new ArrayList<>(); // lists down the credentials that belong to currentUserID
-				for (int i = 0; i < user.size(); i++) {					// list all credentials
-					if (credUserID.get(i).equals(currentUserID)) userCredentials.add(i);
+				ArrayList<Integer> userCredentials = new ArrayList<>(); 		// lists down the credentials that belong to currentUserID
+				for (int i = 0; i < user.size(); i++) {							// list all credentials
+					if (credentialUserID.get(i).equals(currentUserID)) userCredentials.add(i);
 				}
 
 				if (userCredentials.isEmpty()) {
 					System.out.println("There are no credentials added, yet...");
 				} else {
 					System.out.println("--- Websites ---");
-					for (int i = 0; i < userCredentials.size(); i++) {	// list all credentials of the currentUserID
+					for (int i = 0; i < userCredentials.size(); i++) {			// list all credentials of the currentUserID
 						int index = userCredentials.get(i);
 						System.out.println((i + 1) + ". " + site.get(index));	// site name
 					}
@@ -153,7 +156,7 @@ public class PasswordManagerOld_MultiUser {
 			} else if (choice.equals("3")) {
 				ArrayList<Integer> userCredentials = new ArrayList<>();
 				for (int i = 0; i < user.size(); i++) {
-					if (credUserID.get(i).equals(currentUserID)) userCredentials.add(i);
+					if (credentialUserID.get(i).equals(currentUserID)) userCredentials.add(i);
 				}
 
 				if (userCredentials.isEmpty()) {
@@ -173,7 +176,7 @@ public class PasswordManagerOld_MultiUser {
 						user.remove(actualIndex);
 						password.remove(actualIndex);
 						site.remove(actualIndex);
-						credUserID.remove(actualIndex);
+						credentialUserID.remove(actualIndex);
 						System.out.println("Credential deleted successfully");
 					}
 				}
@@ -181,6 +184,8 @@ public class PasswordManagerOld_MultiUser {
 			} else if (choice.equals("4")) {
 				System.out.println("Exiting.");
 				break;
+			} else {
+				System.out.println("Invalid choice, try again!");
 			}
 		}
 	}
@@ -193,7 +198,7 @@ public class PasswordManagerOld_MultiUser {
 	}
 	// saveData method, i honestly dont know how this works
 	public static void saveData(String db, ArrayList<String> user, ArrayList<String> password, ArrayList<String> site,
-			ArrayList<String> credUserID, ArrayList<String> loginUser, ArrayList<String> loginPass, ArrayList<String> userID) {
+			ArrayList<String> credentialUserID, ArrayList<String> loginUser, ArrayList<String> loginPass, ArrayList<String> userID) {
 		try {
 			File file = new File(db);
 			File parent = file.getParentFile();
@@ -210,7 +215,7 @@ public class PasswordManagerOld_MultiUser {
 					String u = user.get(i).replace("|", "/");
 					String p = password.get(i).replace("|", "/");
 					String s = site.get(i).replace("|", "/");
-					String uid = credUserID.get(i);
+					String uid = credentialUserID.get(i);
 					pw.println(u + "|" + p + "|" + s + "|" + uid);
 				}
 			}
@@ -221,7 +226,7 @@ public class PasswordManagerOld_MultiUser {
 	}
 	// loadDB method, i honestly dont know how this works
 	public static void loadDB(String db, ArrayList<String> user, ArrayList<String> password, ArrayList<String> site,
-			ArrayList<String> loginUser, ArrayList<String> loginPass, ArrayList<String> userID, ArrayList<String> credUserID) {
+			ArrayList<String> loginUser, ArrayList<String> loginPass, ArrayList<String> userID, ArrayList<String> credentialUserID) {
 		try {
 			File file = new File(db);
 			if (!file.exists()) return;
@@ -238,7 +243,7 @@ public class PasswordManagerOld_MultiUser {
 						user.add(parts[0]);
 						password.add(parts[1]);
 						site.add(parts[2]);
-						credUserID.add(parts[3]);
+						credentialUserID.add(parts[3]);
 					}
 				}
 			}
