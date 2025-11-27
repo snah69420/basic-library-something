@@ -293,14 +293,14 @@ public class PasswordManagerOld_MultiUser {
 			if (parent != null) parent.mkdirs();	// mkdir when does not exist
 
 			try (PrintWriter pw = new PrintWriter(new FileWriter(db))) {
-				// login data
+				// login data save to txt
 				for (int i = 0; i < loginUser.size(); i++) {
 					String lu = loginUser.get(i).replace("|", "/");
 					String lp = loginPass.get(i).replace("|", "/");
 					String luID = userID.get(i).replace("|", "/");
 					pw.println("LOGIN|" + lu + "|" + lp + "|" + luID);
 				}
-				// credential data
+				// credential data save to txt
 				for (int i = 0; i < user.size(); i++) {
 					String u = user.get(i).replace("|", "/");
 					String p = password.get(i).replace("|", "/");
@@ -326,10 +326,12 @@ public class PasswordManagerOld_MultiUser {
 				String line;
 				while ((line = br.readLine()) != null) {
 					String[] parts = line.split("\\|");
+					// load loginData
 					if (parts[0].equals("LOGIN")) {
 						loginUser.add(parts[1]);
 						loginPass.add(parts[2]);
 						userID.add(parts[3]);
+					// load Credentials
 					} else if(parts.length >= 4) {
 						user.add(parts[0]);
 						password.add(parts[1]);
