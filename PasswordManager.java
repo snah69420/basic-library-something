@@ -62,8 +62,8 @@ public class PasswordManagerOld_MultiUser {
 						System.out.println("Username or Password does not match, try again!");
 					}
 				}
-				// register
-
+				
+			// register
 			} else if (loginChoice.equals("2")) {
 
 				boolean registered = false;
@@ -90,7 +90,7 @@ public class PasswordManagerOld_MultiUser {
 
 					if (exists) {
 						System.out.println("User already exists, try again!");
-						continue; // returm
+						continue; // return
 					}
 
 					if (!registerPass.equals(registerPassConfirm)) {
@@ -153,41 +153,82 @@ public class PasswordManagerOld_MultiUser {
 					System.out.println("Credentials added!");
 					saveData(db, user, password, site, credentialUserID, loginUser, loginPass, userID);
 
-					// view credentials
+				// view credentials, IDK I LET GEMINI EXPLAIN TO ME HOW TO LIST THE SITES WTHOUT DUPING
 				} else if (choice.equals("2")) {
 					clearScreen();
-					System.out.println("---View Credentials---");
-					ArrayList<Integer> userCredentials = new ArrayList<>(); 		// lists down the credentials that belong to currentUserID
-					for (int i = 0; i < user.size(); i++) {							// list all credentials
-						if (credentialUserID.get(i).equals(currentUserID)) userCredentials.add(i);
+					System.out.println("--- View Credentials by Site ---");
+
+					// list of credentals belonging to the current user
+					ArrayList<Integer> userCredentialsIndices = new ArrayList<>();
+					for (int i = 0; i < user.size(); i++) {
+						if (credentialUserID.get(i).equals(currentUserID)) {
+							userCredentialsIndices.add(i);
+						}
 					}
 
-					if (userCredentials.isEmpty()) {
+					if (userCredentialsIndices.isEmpty()) {
 						System.out.println("There are no credentials added, yet...");
+
 					} else {
-						System.out.println("--- Websites ---");
-						for (int i = 0; i < userCredentials.size(); i++) {			// list all credentials of the currentUserID
-							int index = userCredentials.get(i);
-							System.out.println((i + 1) + ". " + site.get(index));	// site name
+						// 2. Find all the unique site names
+						ArrayList<String> uniqueSites = new ArrayList<>();
+						for (int index : userCredentialsIndices) {
+							String currentSite = site.get(index);
+							// Only add the site name if it hasn't been added yet
+							if (!uniqueSites.contains(currentSite)) {
+								uniqueSites.add(currentSite);
+							}
 						}
 
-						System.out.println("Select a website: ");
-						int query_site = input.nextInt();
+						// site list main menu
+						System.out.println("--- Websites ---");
+						for (int i = 0; i < uniqueSites.size(); i++) {
+							String siteName = uniqueSites.get(i);
+
+							// Count how many credentials belong to this site for the display
+							int count = 0;
+							for (int index : userCredentialsIndices) {
+								if (site.get(index).equals(siteName)) {
+									count++;
+								}
+							}
+							// spit out the site and how many credentials are there
+							System.out.println((i + 1) + ". " + siteName + " (" + count + " credential" + (count > 1 ? "s" : "") + ")");
+						}
+
+						System.out.print("Select a website number: ");
+
+
+						int querySiteChoice = input.nextInt();
 						input.nextLine();
 
-						if (query_site < 1 || query_site > userCredentials.size()) {
+						if (querySiteChoice < 1 || querySiteChoice > uniqueSites.size()) {
 							System.out.println("Invalid choice, try again!");
 
 						} else {
-							int site_index = userCredentials.get(query_site - 1);
-							System.out.println("--- Credentials on " + site.get(site_index) + " ---");
-							System.out.println("Username: " + user.get(site_index));
-							System.out.println("Password: " + password.get(site_index));
+
+							String selectedSite = uniqueSites.get(querySiteChoice - 1);
+
+							System.out.println("--- Credentials for " + selectedSite + " ---");
+
+							// loop through all user's credentials thingy
+							int credentialCount = 0;
+							for (int actualIndex : userCredentialsIndices) {
+								if (site.get(actualIndex).equals(selectedSite)) {
+									credentialCount++;
+									System.out.println("Credential " + credentialCount + ":");
+									System.out.println("  Username/Email: " + user.get(actualIndex));
+									System.out.println("  Password: " + password.get(actualIndex));
+									System.out.println("-------------------------");
+								}
+							}
+
 							System.out.println("Press enter to return to menu...");
 							input.nextLine();
 						}
 					}
-					// delete credentials
+
+				// delete credentials
 				} else if (choice.equals("3")) {
 					clearScreen();
 					ArrayList<Integer> userCredentials = new ArrayList<>();
@@ -213,7 +254,7 @@ public class PasswordManagerOld_MultiUser {
 							password.remove(actualIndex);
 							site.remove(actualIndex);
 							credentialUserID.remove(actualIndex);
-							System.out.println("Credential deleted successfully");
+							System.out.println("Credential deleted successfully!");
 						}
 					}
 				} else if (choice.equals("4")) {
