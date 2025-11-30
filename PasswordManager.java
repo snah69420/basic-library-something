@@ -47,11 +47,12 @@ public class PasswordManagerOld_MultiUser {
 
 					// kowalski, analysis
 					boolean found = false;
-					for (int i = 0; i < loginUser.size(); i++) { 					// this for loop loops through all registered users, it will try until it matches the userinput
+					for (int i = 0; i < loginUser.size(); i++) { 					// this for loop loops through all registered users, it will try until it matches the userinput (loginUserRegistered/login
 						String storedUser = loginUser.get(i); 						//	<</ This part gets the username of
 						String storedPass = loginPass.get(i); 						//	<<\ the (i)th registered user in the database.txt
 						if (loginUserRegistered.equalsIgnoreCase(storedUser) && loginPassRegistered.equals(storedPass)) {
-							System.out.println("Successfully logged in, welcome!");
+							clearScreen();
+							System.out.println("Successfully logged in, Welcome!");
 							currentUserID = userID.get(i); 	 						// store the logged in user's userID to the memory
 							loggedIn = true;
 							found = true;	
@@ -59,10 +60,11 @@ public class PasswordManagerOld_MultiUser {
 						}
 					}
 					if (!found) {													// not found fallback
+						clearScreen();
 						System.out.println("Username or Password does not match, try again!");
 					}
 				}
-				
+			
 			// register
 			} else if (loginChoice.equals("2")) {
 
@@ -106,9 +108,9 @@ public class PasswordManagerOld_MultiUser {
 					loginUser.add(registerUser);
 					loginPass.add(registerPass);
 					userID.add(regUserID);
-
-					System.out.println("Successfully registered.");
-					System.out.println("Your userID is: " + regUserID); 		// feel free to comment to remove this part
+					
+					System.out.println("Successfully registered!");
+					System.out.println("Your userID is: " + regUserID); 		// feel free to comment to remove this part, this was added for debugging reasons
 
 					saveData(db, user, password, site, credentialUserID, loginUser, loginPass, userID);
 
@@ -126,6 +128,9 @@ public class PasswordManagerOld_MultiUser {
 			// -----------------------------------------------------------MAIN MENU!!!!----------------------------------------------------------------------------
 			while (true) {
 				int currentIndex = loginUser.indexOf(getCurrentUser(loginUser, userID, currentUserID));
+				
+				titleArt();
+				
 				System.out.println("---Welcome to our Password Manager, " + loginUser.get(currentIndex) + "!---");
 				System.out.println("1. Add Credentials");
 				System.out.println("2. View Credentials");
@@ -150,6 +155,7 @@ public class PasswordManagerOld_MultiUser {
 					site.add(input.nextLine());
 					credentialUserID.add(currentUserID);
 
+					clearScreen();
 					System.out.println("Credentials added!");
 					saveData(db, user, password, site, credentialUserID, loginUser, loginPass, userID);
 
@@ -168,9 +174,12 @@ public class PasswordManagerOld_MultiUser {
 
 					if (userCredentialsIndices.isEmpty()) {
 						System.out.println("There are no credentials added, yet...");
+						System.out.print("Press enter to return to main menu...");
+						input.nextLine();
+						clearScreen();
 
 					} else {
-						// 2. Find all the unique site names
+						// find all the unique site names
 						ArrayList<String> uniqueSites = new ArrayList<>();
 						for (int index : userCredentialsIndices) {
 							String currentSite = site.get(index);
@@ -185,7 +194,7 @@ public class PasswordManagerOld_MultiUser {
 						for (int i = 0; i < uniqueSites.size(); i++) {
 							String siteName = uniqueSites.get(i);
 
-							// Count how many credentials belong to this site for the display
+							// count how many credentials belong to this site for the display
 							int count = 0;
 							for (int index : userCredentialsIndices) {
 								if (site.get(index).equals(siteName)) {
@@ -206,7 +215,7 @@ public class PasswordManagerOld_MultiUser {
 							System.out.println("Invalid choice, try again!");
 
 						} else {
-
+							clearScreen();
 							String selectedSite = uniqueSites.get(querySiteChoice - 1);
 
 							System.out.println("--- Credentials for " + selectedSite + " ---");
@@ -225,6 +234,7 @@ public class PasswordManagerOld_MultiUser {
 
 							System.out.println("Press enter to return to menu...");
 							input.nextLine();
+							clearScreen();
 						}
 					}
 
@@ -242,8 +252,8 @@ public class PasswordManagerOld_MultiUser {
 						System.out.println("---Delete Credentials---");
 						for (int i = 0; i < userCredentials.size(); i++) {
 							int idx = userCredentials.get(i);
-							System.out.println((i + 1) + ". " + site.get(idx));
-						}
+							System.out.println((i + 1) + ". " + user.get(idx) + " " + "(" + site.get(idx) + ")");
+						} // list credentials
 						System.out.print("Enter a number to delete: ");
 						int delIndex = Integer.parseInt(input.nextLine()) - 1;
 						if (delIndex < 0 || delIndex >= userCredentials.size()) {
@@ -254,7 +264,11 @@ public class PasswordManagerOld_MultiUser {
 							password.remove(actualIndex);
 							site.remove(actualIndex);
 							credentialUserID.remove(actualIndex);
+							
+							clearScreen();
 							System.out.println("Credential deleted successfully!");
+							
+							saveData(db, user, password, site, credentialUserID, loginUser, loginPass, userID);
 						}
 					}
 				} else if (choice.equals("4")) {
@@ -285,7 +299,7 @@ public class PasswordManagerOld_MultiUser {
 								site.remove(i);
 							}
 						}
-						// remove current session credentials
+						// remove current session's entire credentials
 						loginUser.remove(currentlyLoggedIn);
 						loginPass.remove(currentlyLoggedIn);
 						userID.remove(currentlyLoggedIn);
@@ -309,7 +323,7 @@ public class PasswordManagerOld_MultiUser {
 				} else {
 					clearScreen();
 					System.out.println("Invalid choice, try again!");
-					continue;
+					continue; // return to main menu :P
 				}
 			}
 		}
@@ -322,10 +336,10 @@ public class PasswordManagerOld_MultiUser {
 		for (int i = 0; i < userID.size(); i++) {
 			if (userID.get(i).equals(currentUserID)) return loginUser.get(i);
 		}
-		return loginUser.get(0); //return to first username, definitely wont happen but just incase the thing crashes
+		return loginUser.get(0); //return to first username, definitely wont happen but this will just prevent the app from crashing when it happens :P
 	}
 
-	// saveData method, i honestly dont know how this works
+	// saveData method, this will print the provided input to database.txt
 	public static void saveData(String db, ArrayList<String> user, ArrayList<String> password, ArrayList<String> site,
 			ArrayList<String> credentialUserID, ArrayList<String> loginUser, ArrayList<String> loginPass, ArrayList<String> userID) {
 		try {
@@ -356,7 +370,7 @@ public class PasswordManagerOld_MultiUser {
 		}
 	}
 
-	// loadDB method, i honestly dont know how this works
+	// loadDB method, loads the db on execution, i honestly forgot how this worked
 	public static void loadDB(String db, ArrayList<String> user, ArrayList<String> password, ArrayList<String> site,
 			ArrayList<String> loginUser, ArrayList<String> loginPass, ArrayList<String> userID, ArrayList<String> credentialUserID) {
 		try {
@@ -386,9 +400,20 @@ public class PasswordManagerOld_MultiUser {
 		}
 	}
 
-	// cherry on top
+	// cherry on top, floods the thing with blank lines 100 times
 	public static void clearScreen() {
-		for (int i = 0; i < 50; i++) 
+		for (int i = 0; i < 100; i++)
 			System.out.println();
+	}
+	// ASCII ART!!! very kewl XD
+	public static void titleArt() {
+		System.out.println();
+		System.out.println(" ▄▄▄▄▄                                                █         ▄    ▄                                          ");
+		System.out.println(" █   ▀█  ▄▄▄    ▄▄▄    ▄▄▄  ▄     ▄  ▄▄▄    ▄ ▄▄   ▄▄▄█         ██  ██  ▄▄▄   ▄ ▄▄    ▄▄▄    ▄▄▄▄   ▄▄▄    ▄ ▄▄ ");
+		System.out.println(" █▄▄▄█▀ ▀   █  █   ▀  █   ▀ ▀▄ ▄ ▄▀ █▀ ▀█   █▀  ▀ █▀ ▀█         █ ██ █ ▀   █  █▀  █  ▀   █  █▀ ▀█  █▀  █   █▀  ▀");
+		System.out.println(" █      ▄▀▀▀█   ▀▀▀▄   ▀▀▀▄  █▄█▄█  █   █   █     █   █         █ ▀▀ █ ▄▀▀▀█  █   █  ▄▀▀▀█  █   █  █▀▀▀▀   █    ");
+		System.out.println(" █      ▀▄▄▀█  ▀▄▄▄▀  ▀▄▄▄▀   █ █   ▀█▄█▀   █     ▀█▄██         █    █ ▀▄▄▀█  █   █  ▀▄▄▀█  ▀█▄▀█  ▀█▄▄▀   █    ");
+		System.out.println("                                                                                             ▄  █               ");
+		System.out.println("                                                                                              ▀▀                ");
 	}
 }
