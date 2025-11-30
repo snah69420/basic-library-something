@@ -117,6 +117,8 @@ public class PasswordManagerOld_MultiUser {
 					loginPass.add(registerPass);
 					userID.add(regUserID);
 					
+					
+					clearScreen();
 					System.out.println("Successfully registered!");
 					System.out.println("Your userID is: " + regUserID); 		// feel free to comment to remove this part, this was added for debugging reasons
 
