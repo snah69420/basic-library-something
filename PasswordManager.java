@@ -21,7 +21,7 @@ public class PasswordManagerOld_MultiUser {
 		ArrayList<String> credentialUserID = new ArrayList<>();
 		String db = "database.txt";
 		
-		// ANSI something something for errors
+		// ANSI colors for the error stuff
 		String RED = "\u001B[31m";
 		String RESET = "\u001B[0m";
 
@@ -98,10 +98,14 @@ public class PasswordManagerOld_MultiUser {
 						System.out.println(RED + "User already exists, try again!" + RESET);
 						continue; // return
 					}
-
+					// if password does not match
 					if (!registerPass.equals(registerPassConfirm)) {
 						System.out.println(RED + "Passwords do not match, try again!" + RESET);
-						continue; //
+						continue; 
+					// if user/pass is empty
+					} else if (registerPass.isEmpty() || registerUser.isEmpty()) {
+						System.out.println(RED + "Username/Password is empty, try again!" + RESET);
+						continue;
 					}
 
 					// add to database
@@ -122,6 +126,7 @@ public class PasswordManagerOld_MultiUser {
 					loggedIn = true;
 					registered = true;
 				}
+				
 			} else {
 				System.out.println(RED + "Invalid choice, try again!" + RESET);
 				continue;
