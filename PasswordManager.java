@@ -20,6 +20,10 @@ public class PasswordManagerOld_MultiUser {
 		ArrayList<String> site = new ArrayList<>();
 		ArrayList<String> credentialUserID = new ArrayList<>();
 		String db = "database.txt";
+		
+		// ANSI something something for errors
+		String RED = "\u001B[31m";
+		String RESET = "\u001B[0m";
 
 
 		// load the database
@@ -61,7 +65,7 @@ public class PasswordManagerOld_MultiUser {
 					}
 					if (!found) {													// not found fallback
 						clearScreen();
-						System.out.println("Username or Password does not match, try again!");
+						System.out.println(RED + "Username or Password does not match, try again!" + RESET);
 					}
 				}
 			
@@ -91,12 +95,12 @@ public class PasswordManagerOld_MultiUser {
 					}
 
 					if (exists) {
-						System.out.println("User already exists, try again!");
+						System.out.println(RED + "User already exists, try again!" + RESET);
 						continue; // return
 					}
 
 					if (!registerPass.equals(registerPassConfirm)) {
-						System.out.println("Passwords do not match, try again!");
+						System.out.println(RED + "Passwords do not match, try again!" + RESET);
 						continue; //
 					}
 
@@ -119,7 +123,7 @@ public class PasswordManagerOld_MultiUser {
 					registered = true;
 				}
 			} else {
-				System.out.println("Invalid choice, try again!");
+				System.out.println(RED + "Invalid choice, try again!" + RESET);
 				continue;
 			}
 
@@ -127,6 +131,7 @@ public class PasswordManagerOld_MultiUser {
 
 			// -----------------------------------------------------------MAIN MENU!!!!----------------------------------------------------------------------------
 			while (true) {
+				// Currently logged in user
 				int currentIndex = loginUser.indexOf(getCurrentUser(loginUser, userID, currentUserID));
 				
 				titleArt();
@@ -212,7 +217,7 @@ public class PasswordManagerOld_MultiUser {
 						input.nextLine();
 
 						if (querySiteChoice < 1 || querySiteChoice > uniqueSites.size()) {
-							System.out.println("Invalid choice, try again!");
+							System.out.println(RED + "Invalid choice, try again!" + RED);
 
 						} else {
 							clearScreen();
@@ -240,7 +245,9 @@ public class PasswordManagerOld_MultiUser {
 
 				// delete credentials
 				} else if (choice.equals("3")) {
+					
 					clearScreen();
+					
 					ArrayList<Integer> userCredentials = new ArrayList<>();
 					for (int i = 0; i < user.size(); i++) {
 						if (credentialUserID.get(i).equals(currentUserID)) userCredentials.add(i);
@@ -257,7 +264,7 @@ public class PasswordManagerOld_MultiUser {
 						System.out.print("Enter a number to delete: ");
 						int delIndex = Integer.parseInt(input.nextLine()) - 1;
 						if (delIndex < 0 || delIndex >= userCredentials.size()) {
-							System.out.println("Invalid number.");
+							System.out.println(RED + "Invalid number." + RESET);
 						} else {
 							int actualIndex = userCredentials.get(delIndex);
 							user.remove(actualIndex);
@@ -272,13 +279,15 @@ public class PasswordManagerOld_MultiUser {
 						}
 					}
 				} else if (choice.equals("4")) {
+					
 					clearScreen();
+					
 					System.out.println("Are you sure you want to delete your account?");
 
 					System.out.print("Enter your password to confirm: ");
 					String confirmDelete = input.nextLine();
 
-					System.out.println("ARE YOU SURE??? THIS WILL DELETE EVERYTHING YOU HAD IN YOUR LIFE. TYPE 'CONFIRM' TO CONFIRM DELETION.");
+					System.out.println(RED + "ARE YOU SURE??? THIS WILL DELETE ALL DATA ASSOCIATED TO YOUR USER. TYPE 'CONFIRM' TO CONFIRM DELETION." + RESET);
 
 					System.out.print("Confirm: ");
 					String againConfirm = input.nextLine();
@@ -307,6 +316,7 @@ public class PasswordManagerOld_MultiUser {
 						saveData(db, user, password, site, credentialUserID, loginUser, loginPass, userID);
 
 						System.out.println("Account successfully deleted.");
+						System.out.println("I am not responsible for bricked devices, dead SD cards, * thermonuclear war, or you getting fired because the alarm app failed.");
 						return;
 
 					} else {
@@ -322,7 +332,7 @@ public class PasswordManagerOld_MultiUser {
 					break;
 				} else {
 					clearScreen();
-					System.out.println("Invalid choice, try again!");
+					System.out.println(RED + "Invalid choice, try again!" + RESET);
 					continue; // return to main menu :P
 				}
 			}
