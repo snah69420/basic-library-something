@@ -328,7 +328,7 @@ public class PasswordManagerOld_MultiUser {
 
 					} else {
 						System.out.println("Password does not match, try again!");
-						return;
+						continue;
 					}
 
 
@@ -434,3 +434,4 @@ public class PasswordManagerOld_MultiUser {
 		System.out.println("                                                                                              ▀▀                ");
 	}
 }
+
