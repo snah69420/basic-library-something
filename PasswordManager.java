@@ -185,7 +185,7 @@ public class PasswordManagerOld_MultiUser {
 					}
 
 					if (userCredentialsIndices.isEmpty()) {
-						System.out.println("There are no credentials added, yet...");
+						System.out.println(RED + "There are no credentials added, yet..." + RESET);
 						System.out.print("Press enter to return to main menu...");
 						input.nextLine();
 						clearScreen();
@@ -261,7 +261,7 @@ public class PasswordManagerOld_MultiUser {
 					}
 
 					if (userCredentials.isEmpty()) {
-						System.out.println("There are no credentials added, yet...");
+						System.out.println(RED + "There are no credentials added, yet..." + RESET);
 					} else {
 						System.out.println("---Delete Credentials---");
 						for (int i = 0; i < userCredentials.size(); i++) {
@@ -387,7 +387,7 @@ public class PasswordManagerOld_MultiUser {
 		}
 	}
 
-	// loadDB method, loads the db on execution, i honestly forgot how this worked
+	// loadDB method, loads the db on execution
 	public static void loadDB(String db, ArrayList<String> user, ArrayList<String> password, ArrayList<String> site,
 			ArrayList<String> loginUser, ArrayList<String> loginPass, ArrayList<String> userID, ArrayList<String> credentialUserID) {
 		try {
@@ -434,4 +434,3 @@ public class PasswordManagerOld_MultiUser {
 		System.out.println("                                                                                              ▀▀                ");
 	}
 }
-
